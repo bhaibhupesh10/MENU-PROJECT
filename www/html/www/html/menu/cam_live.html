@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Cam</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0482c6ab;
+            padding-top: 60px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        video {
+            width: 640px;
+            height: 480px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #000;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            width: 100%;
+            height: 60px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="linuxworld_informatics_pvt_ltd_logo.jpeg" alt="Logo" class="logo">
+    </header>
+    <div class="container">
+        <h1>Live Cam Task</h1>
+        <video id="video" autoplay></video>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const video = document.getElementById('video');
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(err => {
+                        console.error("Error accessing camera: ", err);
+                    });
+            } else {
+                alert("Sorry, your browser does not support camera access.");
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send SMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: #fff;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            width: 300px; /* Adjust width as needed */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"], textarea {
+            width: calc(100% - 20px); /* Adjust width as needed */
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .alert {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            display: none; /* Initially hidden */
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            
+            var formData = new FormData(document.getElementById('smsForm'));
+
+            fetch('/cgi-bin/sms.py', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var alertBox = document.getElementById('alertBox');
+                if (data.success) {
+                    alertBox.className = 'alert alert-success';
+                    alertBox.innerText = data.message;
+                } else {
+                    alertBox.className = 'alert alert-success';
+                    alertBox.innerText = data.message;
+                }
+                alertBox.style.display = 'block'; // Show the alert box
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                var alertBox = document.getElementById('alertBox');
+                alertBox.className = 'alert alert-success';
+                alertBox.innerText = 'SMS sent successfully.';
+                alertBox.style.display = 'block'; // Show the alert box
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Send SMS</h1>
+        <form id="smsForm" onsubmit="submitForm(event)">
+            <label for="recipient_number">Recipient Number:</label>
+            <input type="text" id="recipient_number" name="recipient_number" placeholder="+917489356891" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4" placeholder="Enter your message" required></textarea>
+
+            <button type="submit">Send</button>
+        </form>
+        <div id="alertBox" class="alert"></div>
+    </div>
+</body>
+</html>
+

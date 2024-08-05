@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Get Logs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-white flex flex-col items-center justify-center min-h-screen p-4">
+    <h1 class="text-4xl font-bold mb-8">Get Logs</h1>
+    <form action="/cgi-bin/AWSfiles/get_logs.py" method="post" class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-lg space-y-6">
+        <div>
+            <label for="logGroupName" class="block text-sm font-medium mb-2">Log Group Name:</label>
+            <input type="text" id="logGroupName" name="logGroupName" placeholder="Enter Log Group Name" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 outline-none text-gray-300">
+        </div>
+        <div>
+            <label for="logStreamName" class="block text-sm font-medium mb-2">Log Stream Name:</label>
+            <input type="text" id="logStreamName" name="logStreamName" placeholder="Enter Log Stream Name" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 outline-none text-gray-300">
+        </div>
+        <div>
+            <label for="awsAccessKey" class="block text-sm font-medium mb-2">AWS Access Key:</label>
+            <input type="text" id="awsAccessKey" name="awsAccessKey" placeholder="Enter AWS Access Key" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 outline-none text-gray-300">
+        </div>
+        <div>
+            <label for="awsSecretKey" class="block text-sm font-medium mb-2">AWS Secret Key:</label>
+            <input type="text" id="awsSecretKey" name="awsSecretKey" placeholder="Enter AWS Secret Key" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 outline-none text-gray-300">
+        </div>
+        <div>
+            <label for="regionName" class="block text-sm font-medium mb-2">Region Name:</label>
+            <input type="text" id="regionName" name="regionName" placeholder="Enter Region Name" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 outline-none text-gray-300">
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded font-semibold transition transform hover:scale-105">Get Logs</button>
+    </form>
+    <div id="result" class="mt-6 p-4 bg-gray-800 rounded-lg w-full max-w-lg text-gray-300"></div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var formData = new FormData(event.target);
+            var params = new URLSearchParams(formData);
+
+            fetch('/cgi-bin/AWSfiles/get_logs.py', {
+                method: 'POST',
+                body: params
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result').innerText = data;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+
+</html>
+

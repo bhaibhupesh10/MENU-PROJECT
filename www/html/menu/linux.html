@@ -1,0 +1,88 @@
+~
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Linux Terminal</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+        }
+
+        #terminal {
+            width: 80%;
+            margin: 50px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #input {
+            width: 100%;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        #output {
+            width: 100%;
+            padding: 10px;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+            overflow-y: auto;
+            height: 300px;
+            box-sizing: border-box;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        .prompt {
+            color: #0f0;
+        }
+
+        .command {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <div id="output"></div>
+        <input type="text" id="input" placeholder="Type your command here" autofocus autocomplete="off" onkeydown="handleInput(event)">
+    </div>
+
+    <script>
+        function handleInput(event) {
+            if (event.key === 'Enter') {
+                var input = document.getElementById('input');
+                var command = input.value.trim();
+                input.value = '';
+
+                var output = document.getElementById('output');
+                output.innerHTML += '<div><span class="prompt">$</span> <span class="command">' + command + '</span></div>';
+
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        output.innerHTML += '<div>' + xhr.responseText + '</div>';
+                        output.scrollTop = output.scrollHeight;
+                    }
+                };
+                xhr.open("GET", "/cgi-bin/linux.py?cmd=" + encodeURIComponent(command), true);
+                xhr.send();
+            }
+        }
+    </script>
+</body>
+</html>
+

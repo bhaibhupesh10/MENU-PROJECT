@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DynamoDB CGI Interface</title>
+</head>
+<body>
+    <h1>DynamoDB CGI Interface</h1>
+    <form action="/cgi-bin/AWSfiles/dynamodb_cgi.py" method="post">
+        <label for="action">Action:</label>
+        <select id="action" name="action">
+            <option value="list_tables">List Tables</option>
+            <option value="create_table">Create Table</option>
+            <option value="delete_table">Delete Table</option>
+            <option value="put_item">Put Item</option>
+            <option value="get_item">Get Item</option>
+            <option value="delete_item">Delete Item</option>
+        </select><br>
+
+        <label for="table_name">Table Name:</label>
+        <input type="text" id="table_name" name="table_name"><br>
+
+        <label for="item">Item (JSON):</label>
+        <textarea id="item" name="item"></textarea><br>
+
+        <label for="key">Key (JSON):</label>
+        <textarea id="key" name="key"></textarea><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+

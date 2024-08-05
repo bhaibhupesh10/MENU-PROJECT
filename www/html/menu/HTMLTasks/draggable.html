@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Window</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        #window {
+            position: absolute;
+            width: 300px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            cursor: grab;
+        }
+
+        .title-bar .buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .title-bar button {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .title-bar button:hover {
+            background-color: #ccc;
+        }
+
+        .content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="window">
+        <div class="title-bar">
+            <span>Draggable Window</span>
+            <div class="buttons">
+                <button class="minimize"></button>
+                <button class="maximize"></button>
+                <button class="close"></button>
+            </div>
+        </div>
+        <div class="content">
+            <p>This is the content of the window.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the window elements
+        const windowEl = document.getElementById('window');
+        const titleBar = windowEl.querySelector('.title-bar');
+        const minimizeBtn = windowEl.querySelector('.minimize');
+        const maximizeBtn = windowEl.querySelector('.maximize');
+        const closeBtn = windowEl.querySelector('.close');
+
+        // Make the window draggable
+        let isDragging = false;
+        let initialX, initialY, currentX, currentY;
+        let xOffset = 0, yOffset = 0;
+
+        titleBar.addEventListener('mousedown', dragStart);
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('mousemove', drag);
+
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            isDragging = true;
+            titleBar.style.cursor = 'grabbing';
+        }
+
+        function dragEnd() {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+            titleBar.style.cursor = 'grab';
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+
+                // Keep window within viewport bounds
+                const rect = windowEl.getBoundingClientRect();
+                const newX = Math.max(0, Math.min(window.innerWidth - rect.width, xOffset));
+                const newY = Math.max(0, Math.min(window.innerHeight - rect.height, yOffset));
+                
+                setTranslate(newX, newY, windowEl);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+
+        // Handle window controls
+        minimizeBtn.addEventListener('click', () => {
+            windowEl.style.height = '30px';
+            windowEl.style.width = '300px';
+            windowEl.querySelector('.content').style.display = 'none';
+        });
+
+        maximizeBtn.addEventListener('click', () => {
+            if (windowEl.classList.contains('maximized')) {
+                windowEl.style.height = 'auto';
+                windowEl.style.width = '300px';
+                windowEl.classList.remove('maximized');
+            } else {
+                windowEl.style.height = '100vh';
+                windowEl.style.width = '100vw';
+                windowEl.style.top = 0;
+                windowEl.style.left = 0;
+                windowEl.classList.add('maximized');
+            }
+        });
+
+        closeBtn.addEventListener('click', () => {
+            windowEl.style.display = 'none';
+        });
+
+        // Allow restore on double-clicking the title bar
+        titleBar.addEventListener('dblclick', () => {
+            if (windowEl.style.height === '30px') {
+                windowEl.style.height = 'auto';
+                windowEl.querySelector('.content').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+

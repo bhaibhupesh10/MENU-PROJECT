@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send WhatsApp Message</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: center;
+            width: 350px;
+            transition: transform 0.3s;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h1 {
+            color: #075e54; /* WhatsApp green */
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: normal;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #075e54; /* WhatsApp green */
+            font-weight: bold;
+        }
+        input[type="text"],
+        textarea {
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical; /* Allow vertical resizing of textarea */
+        }
+        .btn {
+            background: #075e54; /* WhatsApp green */
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .btn:hover {
+            background: #128c7e; /* Darker shade of WhatsApp green */
+            transform: scale(1.05);
+        }
+        #result {
+            margin-top: 1.5rem;
+            color: #333;
+            font-size: 1rem;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WhatsApp Message</h1>
+        <form id="whatsappForm">
+            <label for="recipient_number">To:</label>
+            <input type="text" id="recipient_number" name="recipient_number" placeholder="Enter recipient number" required>
+
+            <label for="message_body">Message:</label>
+            <textarea id="message_body" name="message_body" rows="4" placeholder="Type your message here..." required></textarea>
+
+            <button type="submit" class="btn">Send</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('whatsappForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var queryString = new URLSearchParams(formData).toString();
+            fetch('/cgi-bin/whatsapp.py?' + queryString)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

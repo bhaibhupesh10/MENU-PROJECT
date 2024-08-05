@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: linear-gradient(45deg, #2980b9, #6dd5fa, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #4682B4;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-right: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .header a:hover {
+            background-color: #555;
+        }
+
+        /* Main content styles */
+        .content {
+            padding: 100px 20px 20px 20px; /* Adjust for the fixed header */
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* Button styles */
+        .btn {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 5px;
+[O            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="#">Home</a>
+        <a href="https://github.com/bhaibhupesh10">Source Code</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        <h1>Welcome to Menu Page</h1>
+
+        <button class="btn btn-primary" onclick="goToGoogleSearch()">Go to Google Search</button>
+        <button class="btn btn-danger" onclick="sendBulkEmail()">Send Bulk Email</button>
+        <button class="btn btn-primary" onclick="geoCoordinates()">Geo Coordinates</button>
+        <button class="btn btn-success" onclick="linuxWebUI()">Linux Terminal</button>
+        <button class="btn btn-success" onclick="dockerAutomation()">Docker Automation</button>
+        <button class="btn btn-danger" onclick="htmlInterpreter()">Live HTML Interpreter</button>
+        <button class="btn btn-primary" onclick="pythonSMS()">SMS through python</button>
+        <button class="btn btn-success" onclick="JScamera()">JS Camera</button>
+        <button class="btn btn-danger" onclick="livesuggests()">Live Suggestions</button>
+        <button class="btn btn-primary" onclick="imagesaver()">Live Camera</button>
+        <button class="btn btn-success" onclick="AWS_services()">AWS Services</button>
+        <button class="btn btn-danger" onclick="htmlTasks()">HTML Tasks</button>
+	 <button class="btn btn-primary" onclick="whatsappmsg()">WhatsApp Message</button>
+ <button class="btn btn-primary" onclick="s3service()">S3 Services</button>
+
+    </div>
+
+
+<script>
+    // Functions to handle button clicks
+    function goToGoogleSearch() {
+        window.location.href = "google_search.html";
+    }
+    function sendBulkEmail() {
+        window.location.href = "send_bulk_email.html";
+    }
+    function geoCoordinates() {
+        window.location.href = "geo_coordinates.html";
+    }
+    function linuxWebUI() {
+        window.location.href = "linux.html";
+    }
+    function dockerAutomation() {
+        window.location.href = "docker.html";
+    }
+    function htmlInterpreter() {
+        window.location.href = "html_live_interpreter.html";
+    }
+    function pythonSMS() {
+        window.location.href = "python_sms.html";
+    }
+    function JScamera(){
+        window.location.href = "https://3.108.133.100/menu/js_camera.html";
+    }
+    function livesuggests(){
+        window.location.href = "cmdsuggest.html";
+    }
+    function imagesaver(){
+        window.location.href = "https://3.108.133.100/menu/imagesaver.html";
+    }
+    function AWS_services(){
+        window.location.href = "http://3.108.133.100/menu/AWSfiles/index.html";
+    }
+    function htmlTasks(){
+        window.location.href = "HTMLTasks/index.html";
+    }
+     function whatsappmsg(){
+        window.location.href = "whatsapp.html";
+    }
+	 function s3service(){
+        window.location.href = "http://3.108.133.100/cgi-bin/AWSfiles/s3_bucket.py";
+    }
+
+</script>
+</body>
+</html>
+

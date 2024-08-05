@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- External libraries -->
+    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Document</title>
+
+    <style>
+        body {
+            background-color: #c7d0d5;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #18122b;
+        }
+
+        .navbar-brand {
+            color: aliceblue;
+        }
+
+        .btn-primary {
+            background-color: #6c757d; /* Dark grey */
+            border-color: #6c757d; /* Dark grey */
+        }
+
+        .btn-primary:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+            border-color: #545b62; /* Darker grey on hover */
+        }
+
+        .form-control-lg {
+            font-size: 1.5rem; /* Larger input font size */
+        }
+
+        #content {
+            margin-top: 20px; /* Space between input/button and content */
+            font-size: 1.2rem; /* Content text size */
+        }
+
+        .container {
+            max-width: 600px; /* Limit width of container for responsive design */
+        }
+    </style>
+</head>
+
+<body>
+	<h1>SNS (Simple notification Service)</h1>
+
+<div class="container mt-5">
+        <div class="d-grid gap-2">
+            <input class="form-control form-control-lg" id="topicname" type="text" placeholder="Enter Topic name"
+                aria-label=".form-control-lg example">
+            <button onclick="sendemail()" class="btn btn-primary">SNS Create Topic</button>
+            <div id="content"></div>
+        </div>
+    </div>
+
+    <script>
+        function sendemail() {
+            var topicname = document.getElementById('topicname').value;
+            axios.get('http://3.108.133.100/cgi-bin/AWSfiles/sns.py', {
+                params: {
+                    name: topicname
+                }
+            })
+            .then(function (response) {
+                document.getElementById("content").innerHTML = response.data;
+            })
+            .catch(function (error) {
+                document.getElementById("content").innerHTML = "Some error occurred";
+            });
+        }
+    </script>
+</body>
+
+</html>
+

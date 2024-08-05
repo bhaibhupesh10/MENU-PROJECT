@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        h2 {
+            color: #333;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        #searchQuery {
+            width: 80%;
+            max-width: 500px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 24px;
+            font-size: 18px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        #searchBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #searchBtn:hover {
+            background-color: #357ae8;
+        }
+        #results {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        #results div {
+            margin-bottom: 20px;
+        }
+        #results h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        #results p {
+            margin: 5px 0;
+            color: #666;
+        }
+        #results a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+        #results a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h2>Google Search</h2>
+    <input type="text" id="searchQuery" placeholder="Enter your search query">
+    <button id="searchBtn">Search</button>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById("searchBtn").addEventListener("click", function() {
+            var query = document.getElementById("searchQuery").value.trim();
+            if (query !== "") {
+                fetch('/cgi-bin/google_search.py?query=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Search results:", data);
+                    displayResults(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching search results:', error);
+                });
+            }
+        });
+
+        function displayResults(results) {
+            var resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+            if (results) {
+                results.forEach(function(result, index) {
+                    var resultDiv = document.createElement("div");
+                    resultDiv.innerHTML = `
+                        <h3>Result ${index + 1}:</h3>
+                        <p>Title: ${result.title}</p>
+                        <p>Link: <a href="${result.link}" target="_blank">${result.link}</a></p>
+                        <p>Snippet: ${result.snippet}</p>
+                    `;
+                    resultsDiv.appendChild(resultDiv);
+                });
+            } else {
+                resultsDiv.textContent = "Failed to retrieve search results.";
+            }
+        }
+    </script>
+</body>
+</html>
+

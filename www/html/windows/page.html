@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Webpage with Background Image</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://via.placeholder.com/1500x1000'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px);
+            z-index: -1;
+        }
+
+        .header {
+            height: 20px;
+            padding: 20px;
+            background: linear-gradient(to right, #3498db, #e74c3c, #9b59b6);
+            color: #fff;
+            text-align: center;
+            transition: background 0.5s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header:hover {
+            background: linear-gradient(to right, #1abc9c, #f39c12, #e74c3c);
+        }
+
+        .logo {
+            width: 20px;
+	    height: auto;
+	   
+        }
+
+        .search-box {
+            flex: 1;
+            margin-left: 20px;
+            position: relative;
+            width: 10px;
+        }
+
+        .search-input {
+            width: calc(100% - 80px);
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #fff;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .search-button {
+            background-color: #fff;
+            color: #3498db;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .button {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .button:hover {
+            background-color: #1abc9c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="background-image"></div>
+        <div class="header">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x50" alt="Logo">
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search...">
+                <button class="search-button">Search</button>
+            </div>
+        </div>
+        <div class="content">
+            <h1>Welcome to My Website</h1>
+            <div class="button-container">
+                <button class="button">&#128640;</button> <!-- Icon Button 1 -->
+                <button class="button">&#128642;</button> <!-- Icon Button 2 -->
+                <button class="button">&#128663;</button> <!-- Icon Button 3 -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

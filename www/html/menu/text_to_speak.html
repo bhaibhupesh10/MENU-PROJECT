@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TEXT TO SPEECH</title>
+</head>
+<body>
+    <h1>Enter text to speech</h1>
+    <form action="/cgi-bin/text_to_speak.py" method="get">
+        <label for="text">Enter text :</label>
+        <input type="text" id="text" name="text">
+        <button type="submit">Speak</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var text = document.getElementById('text').value;
+            fetch('/cgi-bin/text_to_speak.py?text=' + encodeURIComponent(text))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerText = JSON.stringify(data);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Coordinates</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 20px;
+            color: #333;
+            text-align: center;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        label {
+            font-size: 18px;
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #357ae8;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="coordinatesForm">
+        <label for="location">Enter location:</label><br>
+	<input type="text" id="location" name="location" placeholder="City Name"><br> <br>
+     
+	<button type="submit">Get Coordinates</button>
+	<button type="submit">Current Coordinates</button>
+    </form>
+    <hr>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('coordinatesForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var location = document.getElementById('location').value;
+            fetch('/cgi-bin/geo_coordinates.py?location=' + encodeURIComponent(location))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerText = JSON.stringify(data);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
+
