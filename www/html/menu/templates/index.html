@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Docker Analytics</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .chart-container {
+            margin-bottom: 30px;
+            width: 80%;
+            max-width: 800px;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Docker Analytics Dashboard</h1>
+    <div class="chart-container">
+        <svg id="cpuChart" width="800" height="400"></svg>
+    </div>
+    <div class="chart-container">
+        <svg id="memoryChart" width="800" height="400"></svg>
+    </div>
+    <div id="error-message" class="error-message"></div>
+    <script>
+        const updateInterval = 5000; // Update interval in milliseconds
+
+        function updateCharts(stats) {
+            const now = new Date();
+
+            // CPU Chart
+            const cpuChart = d3.select('#cpuChart');
+            const cpuData = stats.map(d => ({ time: now, value: d.cpu }));
+            const cpuLine = d3.line()
+                              .x(d => xScale(d.time))
+                              .y(d => yScale(d.value));
+            const xScale = d3.scaleTime()
+                            .domain(d3.extent(cpuData, d => d.time))
+                            .range([0, 800]);
+            const yScale = d3.scaleLinear()
+                            .domain([0, d3.max(cpuData, d => d.value)])
+                            .range([400, 0]);
+            cpuChart.selectAll('path').remove();
+            cpuChart.append('path')
+                    .datum(cpuData)
+                    .attr('fill', 'none')
+                    .attr('stroke', 'steelblue')
+                    .attr('stroke-width', 1.5)
+                    .attr('d', cpuLine);
+
+            // Memory Chart
+            const memoryChart = d3.select('#memoryChart');
+            const memoryData = stats.map(d => ({ time: now, value: d.memory }));
+            const memoryLine = d3.line()
+                                .x(d => xScale(d.time))
+                                .y(d => yScale(d.value));
+            memoryChart.selectAll('path').remove();
+            memoryChart.append('path')
+                       .datum(memoryData)
+                       .attr('fill', 'none')
+                       .attr('stroke', 'green')
+                       .attr('stroke-width', 1.5)
+                       .attr('d', memoryLine);
+        }
+
+        function fetchDockerStats() {
+            fetch('/cgi-bin/docker_stats.py')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    updateCharts(data);
+                    document.getElementById('error-message').innerText = '';
+                })
+                .catch(error => {
+                    document.getElementById('error-message').innerText = 'Error fetching data: ' + error.message;
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        setInterval(fetchDockerStats, updateInterval);
+    </script>
+</body>
+</html>
+

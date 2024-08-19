@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage S3 Buckets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type=text],
+        input[type=file],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type=submit]:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Create S3 Bucket</h2>
+        <form action="/cgi-bin/AWSfiles/s3_bucket.py" method="post">
+            <input type="hidden" name="action" value="create_bucket">
+            <label for="bucket_name">Bucket Name:</label>
+            <input type="text" id="bucket_name" name="bucket_name" required>
+            <br><br>
+            <input type="submit" value="Create Bucket">
+        </form>
+
+        <h2>Upload File to S3 Bucket</h2>
+        <form action="/cgi-bin/AWSfiles/s3_bucket.py" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="upload_file">
+            <label for="bucket_name">Select Bucket:</label>
+            <select id="bucket_name" name="bucket_name" required>
+                <!-- Options will be dynamically populated by Python script -->
+            </select>
+            <br><br>
+            <label for="file">Choose File:</label>
+            <input type="file" id="file" name="file" required>
+            <br><br>
+            <input type="submit" value="Upload File">
+        </form>
+
+        <!-- This div will display success or error messages -->
+        <div id="message" class="message">
+            <!-- Messages will be dynamically populated by Python script -->
+        </div>
+    </div>
+
+</body>
+
+</html>
+

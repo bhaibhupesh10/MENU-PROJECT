@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Choco</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Add your custom CSS styles here */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 30px;
+            height: 30px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */d
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-black text-blue-500 font-mono">
+    <header class="bg-gray-900 text-blue text-center py-6 border-b border-gray-700">
+        <h1 class="text-4xl font-bold">Docker Automation</h1>
+        <a href="http://3.108.133.100/myportfolio/"><button class="text-xl text-white">HOME</button></a>
+    </header>
+
+    <main class="container mx-auto mt-10 px-4">
+        <!-- Docker Images Section -->
+        <section class="bg-gray-800 shadow-lg rounded-lg p-8 mb-10">
+            <h2 class="text-3xl font-semibold mb-6">Pulled Images</h2>
+            <div class="flex flex-col md:flex-row items-center md:justify-between mb-6 space-y-4 md:space-y-0">
+                <input type="text" id="imageName" class="border border-gray-600 bg-gray-700 p-3 rounded w-full md:w-auto text-green-500 placeholder-gray-500" placeholder="Enter Image Name">
+                <div class="flex space-x-4">
+                    <button id="pullImage" onclick="PullImage()" class="bg-green-600 text-white p-3 rounded hover:bg-green-700">Pull Image</button>
+                    <button id="getAllImages" onclick="GetAllImages()" class="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">Get All Images</button>
+                    <button id="showRunningContainers" onclick="getAllRunningContainers()" class="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">Show Running Containers</button>
+                    <button id="showAllContainers" onclick="getAllContainers()" class="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">Show All Containers</button>
+                    <button id="liveUpdateBtn" onclick="toggleLiveUpdate()" class="bg-yellow-500 text-white p-3 rounded hover:bg-yellow-600">Live Update</button>
+                </div>
+            </div>
+            <div id="loading" class="loader mx-auto" style="display: none;"></div>
+            <div id="getOutput" class="border border-gray-600 p-4 rounded h-64 overflow-auto bg-gray-900 text-white"></div>
+        </section>
+
+        <!-- Container Management Section -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="bg-gray-800 shadow-lg rounded-lg p-8">
+                <h2 class="text-2xl font-semibold mb-6">Launch a Container</h2>
+                <input type="text" id="launchAnContainer" class="border border-gray-600 bg-gray-700 p-3 rounded w-full mb-4 text-green-500 placeholder-gray-500" placeholder="Enter Container Name">
+                <button id="launchContainer" onclick="launchAnContainer()" class="bg-green-600 text-white p-3 rounded w-full hover:bg-green-700">Launch a Container</button>
+            </div>
+            <div class="bg-gray-800 shadow-lg rounded-lg p-8">
+                <h2 class="text-2xl font-semibold mb-6">Start Container</h2>
+                <input type="text" id="containerNameStart" class="border border-gray-600 bg-gray-700 p-3 rounded w-full mb-4 text-green-500 placeholder-gray-500" placeholder="Enter Container Name">
+                <button id="startContainer" onclick="StartContainer()" class="bg-green-600 text-white p-3 rounded w-full hover:bg-green-700">Start Container</button>
+            </div>
+            <div class="bg-gray-800 shadow-lg rounded-lg p-8">
+                <h2 class="text-2xl font-semibold mb-6">Stop Container</h2>
+                <input type="text" id="containerNameStop" class="border border-gray-600 bg-gray-700 p-3 rounded w-full mb-4 text-green-500 placeholder-gray-500" placeholder="Enter Container Name">
+                <button id="stopContainer" onclick="StopContainer()" class="bg-red-600 text-white p-3 rounded w-full hover:bg-red-700">Stop Container</button>
+            </div>
+
+   <div class="bg-gray-800 shadow-lg rounded-lg p-8">
+                <h2 class="text-2xl font-semibold mb-6">List Docker Volume</h2>
+  <button id="dockervolume" onclick="dockervolume()" class="bg-red-600 text-white p-3 rounded w-full hover:bg-red-700">Docker Volume</button>
+
+
+   </div>
+
+      <div class="bg-gray-800 shadow-lg rounded-lg p-8">
+                <h2 class="text-2xl font-semibold mb-6">Docker Network</h2>
+                <button id="startContainer" onclick="dockernetwork()" class="bg-green-600 text-white p-3 rounded w-full hover:bg-green-700">Docker Network</button>
+            </div>
+
+
+
+
+        </section>
+    </main>
+
+    <script>
+        // Variable to store live update interval
+        let liveUpdateInterval;
+
+        // Function to start or stop live update
+        function toggleLiveUpdate() {
+            if (liveUpdateInterval) {
+                clearInterval(liveUpdateInterval);
+                liveUpdateInterval = null;
+                document.getElementById('liveUpdateBtn').textContent = 'Live Update';
+            } else {
+                liveUpdateInterval = setInterval(getAllRunningContainers, 5000); // Fetch every 5 seconds
+                document.getElementById('liveUpdateBtn').textContent = 'Stop  Update';
+            }
+        }
+
+        // Function to show loader
+        function showLoader() {
+            document.getElementById("loading").style.display = "block";
+        }
+
+        // Function to hide loader
+        function hideLoader() {
+            document.getElementById("loading").style.display = "none";
+        }
+
+        // Function to fetch all Docker images
+        function GetAllImages() {
+            showLoader();
+            const url = "http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20images";
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to fetch all running Docker containers
+        function getAllRunningContainers() {
+            showLoader();
+            const url = "http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20ps";
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to fetch all Docker containers
+        function getAllContainers() {
+            showLoader();
+            const url = "http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20ps%20-a";
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to launch a Docker container
+        function launchAnContainer() {
+            showLoader();
+            const containerName = document.getElementById("launchAnContainer").value;
+            const url = `http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20run%20-dit%20${containerName}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to start a Docker container
+        function StartContainer() {
+            showLoader();
+            const containerName = document.getElementById("containerNameStart").value;
+            const url = `http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20start%20${containerName}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+//--------------------------------------------------------------------------------------------
+
+  function dockervolume() {
+            showLoader();
+            const containerName = document.getElementById("containerNameStart").value;
+            const url = `http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20volume%20ls`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+
+
+
+
+	  function dockernetwork() {
+            showLoader();
+            const containerName = document.getElementById("containerNameStart").value;
+            const url = `http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20network%20ls`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+
+//--------------------------------------------------------------------------------
+
+        // Function to stop a Docker container
+        function StopContainer() {
+            showLoader();
+            const containerName = document.getElementById("containerNameStop").value;
+            const url = `http://3.108.133.100/cgi-bin/docker.py?cmd=docker%20stop%20${containerName}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    hideLoader();
+                    if (xhr.status == 200) {
+                        document.getElementById("getOutput").innerHTML = xhr.responseText;
+                    } else {
+                        console.log(xhr.response);
+                        document.getElementById("getOutput").innerHTML = "Something went wrong";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Initial fetch of running containers when the page loads
+        getAllRunningContainers();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #1c1c1c;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #00ffcc;
+            font-size: 24px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            resize: none;
+            background: #2e2e2e;
+            color: #ffffff;
+        }
+
+        button {
+            background-color: #00ffcc;
+            color: #1c1c1c;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00ccb3;
+        }
+
+        #responseContainer {
+            margin-top: 20px;
+            padding: 20px;
+            border-top: 1px solid #333;
+            text-align: left;
+            font-size: 16px;
+            color: #ffffff;
+            background: #2e2e2e;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Scrollbar styles */
+        #responseContainer::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #responseContainer::-webkit-scrollbar-thumb {
+            background-color: #00ffcc;
+            border-radius: 10px;
+        }
+
+        #responseContainer::-webkit-scrollbar-track {
+            background: #1c1c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gemini GPT</h1>
+        <textarea id="prompt" placeholder="Enter your prompt here..."></textarea>
+        <button id="generateButton">Generate</button>
+        <div id="responseContainer"></div>
+    </div>
+
+    <script>
+        document.getElementById('generateButton').addEventListener('click', function() {
+            var prompt = document.getElementById('prompt').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/cgi-bin/gemini.py', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('responseContainer').innerText = xhr.responseText;
+                }
+            };
+
+            xhr.send('prompt=' + encodeURIComponent(prompt));
+        });
+    </script>
+</body>
+</html>
+

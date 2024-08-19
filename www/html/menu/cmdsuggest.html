@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Suggestions</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        #commandInput {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        #suggestionList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #suggestionList li {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+        #suggestionList li:last-child {
+            border-bottom: none;
+        }
+        #suggestionList li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Command Suggestions</h1>
+        <input type="text" id="commandInput" placeholder="Type a command...">
+        <ul id="suggestionList"></ul>
+    </div>
+
+    <script>
+        const input = document.getElementById('commandInput');
+        const suggestionList = document.getElementById('suggestionList');
+
+        input.addEventListener('input', () => {
+            const query = input.value.trim();
+            if (query.length === 0) {
+                suggestionList.innerHTML = '';
+                return;
+            }
+            fetch(`/cgi-bin/suggestion.py?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionList.innerHTML = '';
+                    data.forEach(suggestion => {
+                        const li = document.createElement('li');
+                        li.textContent = suggestion;
+                        suggestionList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error fetching suggestions:', error));
+        });
+    </script>
+</body>
+</html>
+

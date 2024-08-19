@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DynamoDB Management</title>
+    <script>
+        function handleResponse(response) {
+            alert(JSON.stringify(response, null, 2));
+        }
+
+        function handleError(error) {
+            alert('Error: ' + error);
+        }
+
+        function submitForm(event, action) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            formData.append('action', action);
+
+            fetch('/cgi-bin/AWSfiles/dynamodb_cgi.py', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(handleResponse)
+            .catch(handleError);
+        }
+    </script>
+</head>
+<body>
+    <h1>DynamoDB Management</h1>
+    
+    <h2>Create Table</h2>
+    <form onsubmit="submitForm(event, 'create_table')">
+        Table Name: <input type="text" name="table_name"><br>
+        Key Schema: <textarea name="key_schema"></textarea><br>
+        Attribute Definitions: <textarea name="attribute_definitions"></textarea><br>
+        Provisioned Throughput: <textarea name="provisioned_throughput"></textarea><br>
+        <input type="submit" value="Create Table">
+    </form>
+
+    <h2>List Tables</h2>
+    <form onsubmit="submitForm(event, 'list_tables')">
+        <input type="submit" value="List Tables">
+    </form>
+
+    <h2>Delete Table</h2>
+    <form onsubmit="submitForm(event, 'delete_table')">
+        Table Name: <input type="text" name="table_name"><br>
+        <input type="submit" value="Delete Table">
+    </form>
+</body>
+</html>
+
