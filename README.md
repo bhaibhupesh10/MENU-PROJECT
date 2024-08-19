@@ -41,6 +41,11 @@ pip install beautifulsoup4
 pip install secure-smtplib
 
 
+* Install at once all the dependencies
+
+** pip install twilio google-generativeai geopy paramiko boto3 requests beautifulsoup4 secure-smtplib **
+
+
 
 twilio:
 
