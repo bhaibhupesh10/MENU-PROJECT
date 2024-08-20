@@ -23,7 +23,20 @@ This project serves as a capstone to my learning journey, demonstrating my abili
 
 ---
 
+## Project Deployment
+The project is deployed on httpd (apache)webserver on AWS for that we need:
+1. To  launch an instance on AWS with allowing HTTP, HTTPS, and all traffics.
+2. Then go to root user on the instance.
+3. Then install the httpd webserver.
+   ``` yum install httpd ```
+4. Then start and enable the httpd webserver.
+   ``` systemctl start httpd ```
+   ```systemctl enable httpd ```
+   
+
 ## Install Python Dependencies
+Install python on aws instance.
+``` yum install python3-pip ```
 
 To install the required Python dependencies, use the following commands:
 
@@ -38,13 +51,19 @@ pip install beautifulsoup4
 pip install secure-smtplib
 
 ```
+For docker we need to install docker first.
+ ``` yum install docker ```
 
+Then start and enable docker.
+``` systemctl start docker ```
+``` systemctl enable docker ```
 
 
 Install all dependencies at once:
 
  
-pip install twilio google-generativeai geopy paramiko boto3 requests beautifulsoup4 secure-smtplib
+``` pip install twilio google-generativeai geopy paramiko boto3 requests beautifulsoup4 secure-smtplib ```
+
 Dependency Descriptions
 twilio: Provides a Python library for interacting with the Twilio API, used for sending and receiving SMS, voice calls, and other communications. It's commonly used for integrating messaging or communication features into applications.
 
